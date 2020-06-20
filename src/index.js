@@ -40,18 +40,25 @@ export default class VueRouter {
     this.beforeHooks = []
     this.resolveHooks = []
     this.afterHooks = []
+    /** this.matcher
+     {
+        addRoutes: ƒ addRoutes(routes)
+        match: ƒ match
+     }
+     */
     this.matcher = createMatcher(options.routes || [], this)
 
     let mode = options.mode || 'hash'
     this.fallback = mode === 'history' && !supportsPushState && options.fallback !== false
-    if (this.fallback) {
+    if (this.fallback) { // 如果没有支持的条件, 则默认用hash模式
       mode = 'hash'
     }
     if (!inBrowser) {
-      mode = 'abstract'
+      mode = 'abstract' // node环境 用这个
     }
     this.mode = mode
 
+    //  options.base :  应用的基路径(默认为'/')。例如，如果整个单页应用服务在 /app/ 下，然后 base 就应该设为 "/app/"。
     switch (mode) {
       case 'history':
         this.history = new HTML5History(this, options.base)

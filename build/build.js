@@ -14,7 +14,7 @@ build(configs)
 function build (builds) {
   let built = 0
   const total = builds.length
-  const next = () => {
+  const next = () => { // 流程控制, 打包数组里的每一项, 同步
     buildEntry(builds[built])
       .then(() => {
         built++
@@ -70,7 +70,7 @@ function write (dest, code, zip) {
 
     fs.writeFile(dest, code, err => {
       if (err) return reject(err)
-      if (zip) {
+      if (zip) { // .min 的版本加上一个 gizp 的大小
         zlib.gzip(code, (err, zipped) => {
           if (err) return reject(err)
           report(' (gzipped: ' + getSize(zipped) + ')')

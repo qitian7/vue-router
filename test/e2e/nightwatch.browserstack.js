@@ -1,5 +1,5 @@
 /**
- * Running tests on remote browsers
+ * Running tests on remote(远端) browsers
  */
 
 const BS_USER = process.env.BS_USER

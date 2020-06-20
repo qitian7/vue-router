@@ -13,12 +13,27 @@ export type Matcher = {
   addRoutes: (routes: Array<RouteConfig>) => void;
 };
 
+/** handler
+ routes: [
+   { path: '/', component: Home },
+   { path: '/foo', component: Foo },
+   { path: '/bar', component: Bar },
+   { path: '/é', component: Unicode }
+ ]
+ */
+
 export function createMatcher (
   routes: Array<RouteConfig>,
   router: VueRouter
 ): Matcher {
+  /** 返回路由的 映射信息
+       pathList: (4) ["", "/foo", "/bar", "/é"]
+       pathMap: {"": {…}, /foo: {…}, /bar: {…}, /é: {…}}
+       pathNames: undefined
+   */
   const { pathList, pathMap, nameMap } = createRouteMap(routes)
 
+  // export API: 动态添加更多的路由规则。参数必须是一个符合 routes 选项要求的数组。
   function addRoutes (routes) {
     createRouteMap(routes, pathList, pathMap, nameMap)
   }
@@ -166,7 +181,8 @@ export function createMatcher (
 
   return {
     match,
-    addRoutes
+    addRoutes // export API: 动态添加更多的路由规则。参数必须是一个符合 routes 选项要求的数组。
+
   }
 }
 

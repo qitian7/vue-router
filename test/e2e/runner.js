@@ -20,16 +20,21 @@
  * $ node test/e2e/runner.js --local -e ie,chrome50
  */
 
-require('dotenv').config()
+require('dotenv').config() // Dotenv是一个零依赖模块，可将环境变量从.env文件加载到process.env中。将配置存储在与代码分开的环境中是基于“十二要素应用程序”方法的。
 const { resolve } = require('path')
-const Nightwatch = require('nightwatch')
+
+/** e2e , end 2 end, 端到端(一台s 到 另一台c)
+ * (和unit对比是: e2e完全是黑盒, 完全模仿真实的用户使用) : (站在用户的角度)
+ * (unit: 是程序员根据自己写的逻辑, 测对应的功能) : (站在程序员的角度)
+ */
+const Nightwatch = require('nightwatch') // e2e 框架
 const args = process.argv.slice(2)
 
 // if we are running yarn dev locally, we can pass --dev to avoid launching another server instance
 const server =
   args.indexOf('--dev') > -1 ? null : require('../../examples/server')
 
-// allow running browserstack local
+// allow running browserstack浏览器堆栈 local  允许在本地浏览器运行
 const isLocal = args.indexOf('--local') > -1
 
 const DEFAULT_CONFIG = './nightwatch.json'

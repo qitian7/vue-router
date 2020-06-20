@@ -7,6 +7,7 @@ import { getLocation } from './html5'
 import { setupScroll, handleScroll } from '../util/scroll'
 import { pushState, replaceState, supportsPushState } from '../util/push-state'
 
+// 有个父类 History
 export class HashHistory extends History {
   constructor (router: Router, base: ?string, fallback: boolean) {
     super(router, base)
@@ -14,11 +15,12 @@ export class HashHistory extends History {
     if (fallback && checkFallback(this.base)) {
       return
     }
+    // 确保斜线
     ensureSlash()
   }
 
-  // this is delayed until the app mounts
-  // to avoid the hashchange listener being fired too early
+  // this is delayed until the app mounts to avoid the hashchange listener being fired too early
+  // 这会延迟到应用程序挂载，以避免hashchange侦听器触发得太早
   setupListeners () {
     if (this.listeners.length > 0) {
       return
@@ -106,7 +108,10 @@ function checkFallback (base) {
   }
 }
 
+// 确保 #之后的路径 有斜线, 否则给#号后的加上'/'
 function ensureSlash (): boolean {
+  // 拿到#之后的路径
+  // 比如  http://localhost:8081/basic/#/aa, 拿到'/a'
   const path = getHash()
   if (path.charAt(0) === '/') {
     return true
@@ -115,9 +120,12 @@ function ensureSlash (): boolean {
   return false
 }
 
+// 拿到#之后的路径 (并解好码)
+// 比如  http://localhost:8081/basic/#/aa, 拿到'/a'
 export function getHash (): string {
   // We can't use window.location.hash here because it's not
   // consistent across browsers - Firefox will pre-decode it!
+  // 我们不能在此处使用window.location.hash，因为它不是跨浏览器保持一致的Firefox将对其进行预解码！
   let href = window.location.href
   const index = href.indexOf('#')
   // empty path

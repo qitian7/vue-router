@@ -42,8 +42,9 @@ export class History {
 
   constructor (router: Router, base: ?string) {
     this.router = router
+    // normalizeBase 标准化, 给前面加上'/', 尾部去掉
     this.base = normalizeBase(base)
-    // start with a route object that stands for "nowhere"
+    // start with a route object that stands for "nowhere"  从代表“无处”的路由对象开始
     this.current = START
     this.pending = null
     this.ready = false
@@ -72,6 +73,7 @@ export class History {
     this.errorCbs.push(errorCb)
   }
 
+  // 核心代码 : 改变 页面 ( 根据路由改变, 而动态改变页面 )
   transitionTo (
     location: RawLocation,
     onComplete?: Function,

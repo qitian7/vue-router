@@ -4,6 +4,11 @@ import Regexp from 'path-to-regexp'
 import { cleanPath } from './util/path'
 import { assert, warn } from './util/warn'
 
+/** 返回路由的 映射信息
+     pathList: (4) ["", "/foo", "/bar", "/é"]
+     pathMap: {"": {…}, /foo: {…}, /bar: {…}, /é: {…}}
+     pathNames: undefined
+ */
 export function createRouteMap (
   routes: Array<RouteConfig>,
   oldPathList?: Array<string>,
@@ -21,11 +26,13 @@ export function createRouteMap (
   // $flow-disable-line
   const nameMap: Dictionary<RouteRecord> = oldNameMap || Object.create(null)
 
+  // 把 routes, 内的path, 存入 pathList, 还有path为键的pathMap, 和 nameMap
   routes.forEach(route => {
     addRouteRecord(pathList, pathMap, nameMap, route)
   })
 
-  // ensure wildcard routes are always at the end
+  // ensure wildcard routes are always at the end 确保通配符路由始终在末尾
+  // 写了 * 号的 比如{ path: '*', component: Home },  一定要放在最后面
   for (let i = 0, l = pathList.length; i < l; i++) {
     if (pathList[i] === '*') {
       pathList.push(pathList.splice(i, 1)[0])
@@ -34,14 +41,16 @@ export function createRouteMap (
     }
   }
 
+  // ( 校验: ) 非嵌套路由必须包含斜杠字符
   if (process.env.NODE_ENV === 'development') {
     // warn if routes do not include leading slashes
     const found = pathList
-    // check for missing leading slash
+    // check for missing leading slash 检查缺少的斜杠
       .filter(path => path && path.charAt(0) !== '*' && path.charAt(0) !== '/')
 
     if (found.length > 0) {
       const pathNames = found.map(path => `- ${path}`).join('\n')
+      // 非嵌套路由必须包含斜杠字符
       warn(false, `Non-nested routes must include a leading slash character. Fix the following routes: \n${pathNames}`)
     }
   }

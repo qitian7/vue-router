@@ -3,6 +3,9 @@ import Link from './components/link'
 
 export let _Vue
 
+// 1. Use plugin.
+// This installs <router-view> and <router-link>,
+// and injects $router and $route to all router-enabled child components
 export function install (Vue) {
   if (install.installed && _Vue === Vue) return
   install.installed = true
@@ -18,8 +21,11 @@ export function install (Vue) {
     }
   }
 
+  // 在vue的所有组件里 混入
+  // 以下里面的this都指向vue
   Vue.mixin({
     beforeCreate () {
+      // 如果没有 初始化路由, 则初始化一次
       if (isDef(this.$options.router)) {
         this._routerRoot = this
         this._router = this.$options.router
